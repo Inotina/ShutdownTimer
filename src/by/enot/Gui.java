@@ -5,7 +5,6 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Timer;
@@ -45,16 +44,16 @@ public class Gui extends JFrame {
 		});
 		userInputTime.setBounds(120, 25, 60, 20);
 		add(userInputTime);
-		confirmButton = new JButton("Запуск");
+		confirmButton = new JButton("Start");
 		confirmButton.setBounds(105, 50, 90, 30);
 		add(confirmButton);
-		mainLabel = new JLabel("Введите время в минутах");
-		mainLabel.setBounds(76, -3, 148, 30);
+		mainLabel = new JLabel("Type time in mins");
+		mainLabel.setBounds(96, -3, 148, 30);
 		add(mainLabel);
 		buttonListener = new ButtonListener();
 		confirmButton.addActionListener(buttonListener);
 		waitingForShutdownBar = new JProgressBar();
-		cancelButton = new JButton("Отмена");
+		cancelButton = new JButton("Cancel");
 		cancelButton.addActionListener(buttonListener);
 
 	}
@@ -74,7 +73,7 @@ public class Gui extends JFrame {
 				} catch (Exception e1) {
 					userInputTime.setText("");
 					userInputTime.requestFocus();
-					JOptionPane.showMessageDialog(null, "Введите верное число");
+					JOptionPane.showMessageDialog(null, "illegal number");
 					return;
 				}
 				shutdownDelay = parseUserInput * 60000;
@@ -87,16 +86,16 @@ public class Gui extends JFrame {
 				waitingForShutdownBar.setBounds(90, 25, 120, 15);
 				shutdown = new ShutdownTask();
 				updateGui = new UpdateGuiTimeTask();
-				mainLabel.setBounds(15, -3, 270, 30);
+				mainLabel.setBounds(76, -3, 270, 30);
 				try {
 					shutdownTimer.schedule(shutdown, shutdownDelay);
 				} catch (Exception e3) {
-					JOptionPane.showMessageDialog(null, "опачки");
+					JOptionPane.showMessageDialog(null, "Ooops");
 				}
 				try {
 					timeGuiUpdateTimer.scheduleAtFixedRate(updateGui, 0, 1000);
 				} catch (Exception e8) {
-					JOptionPane.showMessageDialog(null, "приехали");
+					JOptionPane.showMessageDialog(null, "Ooops");
 				}
 				repaint();
 			}
@@ -108,12 +107,12 @@ public class Gui extends JFrame {
 				remove(cancelButton);
 				remove(waitingForShutdownBar);
 				userInputTime.setBounds(120, 25, 60, 20);
-				mainLabel.setBounds(76, -3, 148, 30);
+				mainLabel.setBounds(96, -3, 148, 30);
 				add(confirmButton);
 				add(userInputTime);
 				userInputTime.setText("");
 				userInputTime.requestFocus();
-				mainLabel.setText("Введите время в минутах");
+				mainLabel.setText("Type time in mins");
 				repaint();
 			}
 		}
@@ -124,7 +123,7 @@ public class Gui extends JFrame {
 
 		public void run() {
 			int timeLeft = (int) ((shutdownDelay + (activationTime - System.currentTimeMillis())) / 1000);
-			mainLabel.setText("Компьютер выключится через " + timeLeft / 60 + " мин " + timeLeft % 60 + " сек");
+			mainLabel.setText("Shutdown in: " + timeLeft / 60 + " min " + timeLeft % 60 + " sec");
 		}
 	}
 }
